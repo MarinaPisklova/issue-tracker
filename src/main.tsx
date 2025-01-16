@@ -14,10 +14,8 @@ startWorker().then(() => {
         <StrictMode>
             <QueryClientProvider client={queryClient}>
                 <BrowserRouter>
-                    <div className="container">
-                        <App />
-                        <GlobalStyles />
-                    </div>
+                    <App />
+                    <GlobalStyles />
                 </BrowserRouter>
             </QueryClientProvider>
         </StrictMode>,

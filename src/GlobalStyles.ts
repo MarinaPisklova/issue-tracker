@@ -56,6 +56,29 @@ table {
 
 html, body, #root {
   height: 100%;
+  font-family: 'Roboto', sans-serif;
+}
+
+main {
+  display: flex;
+  gap: 4rem;
+}
+
+section {
+  flex: 2;
+}
+
+aside {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+h1 {
+  text-align: center;
+  font-weight: black;
+  font-size: 3rem;
 }
 `;
 
