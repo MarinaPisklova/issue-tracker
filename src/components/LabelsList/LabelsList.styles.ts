@@ -1,5 +1,11 @@
 import styled from 'styled-components';
 
+export const LabelsWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+`;
+
 export const LabelsListWrapper = styled.ul`
     list-style: none;
     padding: 0;

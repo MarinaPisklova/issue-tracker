@@ -1,5 +1,5 @@
 import { useLabelsData } from 'src/helpers/useLabelsData';
-import { LabelButton, LabelsListWrapper } from './LabelsList.styles';
+import { LabelButton, LabelsListWrapper, LabelsWrapper } from './LabelsList.styles';
 
 interface ILabelsList {
     selected: string[];
@@ -10,7 +10,7 @@ export default function LabelsList({ selected, toggle }: ILabelsList) {
     const labelsQuery = useLabelsData();
 
     return (
-        <div className="labels">
+        <LabelsWrapper>
             <h3>Labels</h3>
             {labelsQuery.isLoading ? (
                 <p>Loading...</p>
@@ -30,6 +30,6 @@ export default function LabelsList({ selected, toggle }: ILabelsList) {
                     ))}
                 </LabelsListWrapper>
             )}
-        </div>
+        </LabelsWrapper>
     );
 }

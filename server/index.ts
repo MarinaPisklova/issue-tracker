@@ -6,6 +6,7 @@ export const worker = setupWorker(...handlers);
 
 const wait = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const callWithRetry = async <T extends (...args: any) => any>(
     fn: T,
     depth = 0,

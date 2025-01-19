@@ -9,12 +9,13 @@ export interface Label {
     name: string;
     color: string;
 }
+export type IssueStatus = 'backlog' | 'todo' | 'inProgress' | 'done' | 'cancelled';
 
 export interface Issue {
     id: string;
     number: number;
     title: string;
-    status: 'backlog' | 'todo' | 'inProgress' | 'done' | 'cancelled';
+    status: IssueStatus;
     dueDate: Date | null;
     createdDate: Date;
     createdBy: string;

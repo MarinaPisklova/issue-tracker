@@ -1,85 +1,92 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-  font-size: 100%;
-	vertical-align: baseline;
-}
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
-	display: block;
-}
-ol, ul {
-	list-style: none;
-}
-blockquote, q {
-	quotes: none;
-}
-blockquote:before, blockquote:after,
-q:before, q:after {
-	content: '';
-	content: none;
-}
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
+  html, body, div, span, applet, object, iframe,
+  h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+  a, abbr, acronym, address, big, cite, code,
+  del, dfn, em, img, ins, kbd, q, s, samp,
+  small, strike, strong, sub, sup, tt, var,
+  b, u, i, center,
+  dl, dt, dd, ol, ul, li,
+  fieldset, form, label, legend,
+  table, caption, tbody, tfoot, thead, tr, th, td,
+  article, aside, canvas, details, embed,
+  figure, figcaption, footer, header, hgroup,
+  menu, nav, output, ruby, section, summary,
+  time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+  }
 
-/* GLOBAL STYLES */
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
+  article, aside, details, figcaption, figure,
+  footer, header, hgroup, menu, nav, section {
+    display: block;
+  }
 
-#root {
-  isolation: isolate;
-}
+  ol, ul {
+    list-style: none;
+  }
 
-html, body, #root {
-  height: 100%;
-  font-family: 'Roboto', sans-serif;
-}
+  blockquote, q {
+    quotes: none;
+  }
 
-main {
-  display: flex;
-  gap: 4rem;
-}
+  blockquote:before, blockquote:after,
+  q:before, q:after {
+    content: '';
+    content: none;
+  }
 
-section {
-  flex: 2;
-}
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
 
-aside {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
 
-h1 {
-  text-align: center;
-  font-weight: black;
-  font-size: 3rem;
-}
+  #root {
+    isolation: isolate;
+  }
+
+  html, body, #root {
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  main {
+    display: flex;
+    gap: 4rem;
+  }
+
+  section {
+    flex: 2;
+  }
+
+  aside {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  h1 {
+    text-align: center;
+    font-weight: black;
+    font-size: 3rem;
+  }
+
+  a {
+    color: black;
+    font-weight: 600;
+  }
 `;
 
 export default GlobalStyles;

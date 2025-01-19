@@ -1,5 +1,6 @@
 import { DefaultBodyType, http, HttpResponse, StrictRequest } from 'msw';
-import { issues, labels, users } from './db';
+import { issueComments, issues, labels, users } from './db';
+import { IssueComment } from 'src/types';
 
 const makeUrl = (path: string) =>
     `${typeof window === 'undefined' ? 'http://localhost:8000' : ''}${path}`;
@@ -77,6 +78,57 @@ export const handlers = [
         const pagedIssues = sortedIssues.slice((page - 1) * perPage, page * perPage);
         return HttpResponse.json(pagedIssues, { status: 200 });
     }),
+    http.get(makeUrl('/api/issues/:number'), async ({ request, params }) => {
+        try {
+            await handleErrorDelay(request);
+        } catch {
+            return HttpResponse.json({ error: 'Error in request' }, { status: 500 });
+        }
+        const number = Number(params.number);
+        const issue = issues.find((issue) => issue.number === number);
+        if (!issue) {
+            return HttpResponse.json({ error: 'Issue not found' }, { status: 404 });
+        }
+        return HttpResponse.json(issue, { status: 200 });
+    }),
+    http.get(makeUrl('/api/issues/:number/comments'), async ({ request, params }) => {
+        try {
+            await handleErrorDelay(request);
+        } catch {
+            return HttpResponse.json({ error: 'Error in request' }, { status: 500 });
+        }
+
+        const number = Number(params.number);
+        const issue = issues.find((issue) => issue.number === number);
+        if (!issue) {
+            return HttpResponse.json({ error: 'Issue not found' }, { status: 404 });
+        }
+
+        const url = new URL(request.url);
+
+        const query = url.searchParams;
+        const page = Number(query.get('page')) || 1;
+        const perPage = Number(query.get('limit')) || 10;
+        const order = query.get('order') || 'desc';
+
+        const filteredComments = issue.comments
+            .map((id) => issueComments.find((comment) => comment.id === id))
+            .filter(Boolean) as IssueComment[];
+        const sortedIssues = filteredComments.sort((a, b) => {
+            if (order === 'asc') {
+                if (a.createdDate < b.createdDate) return -1;
+                if (a.createdDate > b.createdDate) return 1;
+                return 0;
+            } else {
+                if (a.createdDate < b.createdDate) return 1;
+                if (a.createdDate > b.createdDate) return -1;
+                return 0;
+            }
+        });
+        const pagedComments = sortedIssues.slice((page - 1) * perPage, page * perPage);
+
+        return HttpResponse.json(pagedComments, { status: 200 });
+    }),
     http.get(makeUrl('/api/users'), async ({ request }) => {
         try {
             await handleErrorDelay(request);
@@ -121,5 +173,24 @@ export const handlers = [
             return HttpResponse.json({ error: 'Label not found' }, { status: 404 });
         }
         return HttpResponse.json(label, { status: 200 });
+    }),
+    http.get(makeUrl('/api/search/issues'), async ({ request }) => {
+        try {
+            await handleErrorDelay(request);
+        } catch {
+            return HttpResponse.json({ error: 'Error in request' }, { status: 500 });
+        }
+
+        const url = new URL(request.url);
+
+        const query = url.searchParams.get('q') || '';
+        if (!query) {
+            return HttpResponse.json({ error: 'Search query is required' }, { status: 401 });
+        }
+        const filteredList = issues.filter((issue) => issue.title.includes(query));
+        return HttpResponse.json(
+            { count: filteredList.length, items: filteredList },
+            { status: 200 },
+        );
     }),
 ];
