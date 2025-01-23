@@ -7,7 +7,13 @@ import { startWorker } from '../server/index';
 import GlobalStyles from './GlobalStyles';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 1000 * 60,
+        },
+    },
+});
 const container = document.getElementById('root') as HTMLElement;
 
 startWorker().then(() => {

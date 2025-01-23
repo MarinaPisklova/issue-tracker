@@ -1,10 +1,11 @@
 import IssueSearchForm from '@components/IssueSearchForm';
 import { IssuesListWrapper, IssuesWrapper } from './IssuesList.styles';
 import IssueItem from '@components/IssueItem';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { api } from 'src/api/api';
 import { Issue } from 'src/types';
+import Loader from '@components/Loader';
 
 interface IIssuesList {
     labels: string[];
@@ -46,9 +47,11 @@ function SearchResults({
 function AllIssues({ issuesQuery }: { issuesQuery: ReturnType<typeof useQuery<Issue[]>> }) {
     return (
         <IssuesWrapper>
-            <h2>Issues List</h2>
+            <h2>Issues List {issuesQuery.fetchStatus === 'fetching' ? <Loader /> : null}</h2>
             {issuesQuery.isLoading ? (
                 <p>Loading...</p>
+            ) : issuesQuery.isError ? (
+                <p>{issuesQuery.error.message}</p>
             ) : (
                 <IssuesListWrapper>
                     {issuesQuery.data?.map((issue) => (
@@ -71,11 +74,19 @@ function AllIssues({ issuesQuery }: { issuesQuery: ReturnType<typeof useQuery<Is
 }
 
 export default function IssuesList({ labels, status }: IIssuesList) {
+    const queryClient = useQueryClient();
     const statusString = status ? `&status=${status}` : '';
     const labelsString = labels.map((label) => `labels[]=${label}`).join('&');
     const issuesQuery = useQuery({
         queryKey: ['issues', { labels, status }],
-        queryFn: api.getIssues(`${statusString}&${labelsString}`),
+        queryFn: async ({ signal }) => {
+            const results = await api.getIssues(`${statusString}&${labelsString}`)({ signal });
+            results.forEach((issue) => {
+                queryClient.setQueryData(['issues', issue.number.toString()], issue);
+            });
+
+            return results;
+        },
     });
 
     const [searchValue, setSearchValue] = useState('');

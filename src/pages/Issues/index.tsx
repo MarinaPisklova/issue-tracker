@@ -2,6 +2,7 @@ import IssuesList from '@components/IssuesList';
 import LabelsList from '@components/LabelsList';
 import { StatusSelect } from '@components/StatusSelect';
 import { useState } from 'react';
+import { LinkButton } from './Issues.styled';
 
 export default function Issues() {
     const [labels, setLabels] = useState<string[]>([]);
@@ -26,6 +27,8 @@ export default function Issues() {
                 />
                 <h3>Status</h3>
                 <StatusSelect value={status} onChange={(event) => setStatus(event.target.value)} />
+                <hr />
+                <LinkButton to="/add">Add Issue</LinkButton>
             </aside>
         </main>
     );

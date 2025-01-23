@@ -5,6 +5,8 @@ import { Link } from 'react-router';
 import { relativeDate } from 'src/helpers/relativeDate';
 import { defaultAvatar } from 'src/consts';
 import { Label } from '@components/Label';
+import { useQueryClient } from '@tanstack/react-query';
+import { api } from 'src/api/api';
 
 interface IIssueItem {
     title: string;
@@ -21,9 +23,21 @@ export default function IssueItem(props: IIssueItem) {
     const { title, number, assignee, commentCount, createdBy, createdDate, labels, status } = props;
     const assigneeUserQuery = useUserData(assignee);
     const createdByUserQuery = useUserData(createdBy);
+    const queryClient = useQueryClient();
+
+    const handleMouseEnter = () => {
+        queryClient.prefetchQuery({
+            queryKey: ['issues', number.toString()],
+            queryFn: api.getIssueById(number.toString()),
+        });
+        queryClient.prefetchQuery({
+            queryKey: ['issues', number.toString(), 'comments'],
+            queryFn: api.getIssueComments(number.toString()),
+        });
+    };
 
     return (
-        <IssueListItem>
+        <IssueListItem onMouseEnter={handleMouseEnter}>
             <div>
                 {status === 'done' || status === 'cancelled' ? (
                     <GoIssueClosed style={{ color: 'red' }} />

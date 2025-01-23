@@ -87,6 +87,11 @@ const GlobalStyles = createGlobalStyle`
     color: black;
     font-weight: 600;
   }
+
+  hr {
+    width: 80%;
+    border-color: #aaa;
+  }
 `;
 
 export default GlobalStyles;

@@ -1,5 +1,5 @@
-export function relativeDate(date) {
-    const delta = Math.round((+new Date() - new Date(date)) / 1000);
+export function relativeDate(date: string | number | Date) {
+    const delta = Math.round((+new Date() - +new Date(date)) / 1000);
 
     const minute = 60;
     const hour = minute * 60;

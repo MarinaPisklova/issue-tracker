@@ -31,3 +31,8 @@ export interface IssueComment {
     createdDate: Date;
     createdBy: string;
 }
+
+export interface AddIssueBody {
+    title: string;
+    comment: string;
+}

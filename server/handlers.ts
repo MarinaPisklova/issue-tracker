@@ -1,6 +1,6 @@
 import { DefaultBodyType, http, HttpResponse, StrictRequest } from 'msw';
 import { issueComments, issues, labels, users } from './db';
-import { IssueComment } from 'src/types';
+import { AddIssueBody, Issue, IssueComment } from 'src/types';
 
 const makeUrl = (path: string) =>
     `${typeof window === 'undefined' ? 'http://localhost:8000' : ''}${path}`;
@@ -192,5 +192,40 @@ export const handlers = [
             { count: filteredList.length, items: filteredList },
             { status: 200 },
         );
+    }),
+    http.post<never, AddIssueBody>(makeUrl('/api/issues'), async ({ request }) => {
+        try {
+            await handleErrorDelay(request);
+        } catch {
+            return HttpResponse.json({ error: 'Error in request' }, { status: 500 });
+        }
+
+        const body = await request.json();
+        const number = issues.length + 1;
+
+        const issueComment = {
+            issueId: `i_${number}`,
+            id: `c_${issueComments.length}`,
+            createdDate: new Date(),
+            createdBy: users[Math.floor(Math.random() * users.length)].id,
+            comment: body.comment,
+        };
+        issueComments.push(issueComment);
+        const issue: Issue = {
+            id: `i_${number}`,
+            number,
+            title: body.title,
+            status: 'backlog',
+            comments: [issueComment.id],
+            createdDate: new Date(),
+            createdBy: users[Math.floor(Math.random() * users.length)].id,
+            dueDate: null,
+            completedDate: null,
+            assignee: null,
+            labels: [],
+        };
+
+        issues.push(issue);
+        return HttpResponse.json(issue, { status: 201 });
     }),
 ];
