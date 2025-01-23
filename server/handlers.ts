@@ -1,6 +1,6 @@
-import { DefaultBodyType, http, HttpResponse, StrictRequest } from 'msw';
+import { DefaultBodyType, http, HttpResponse, PathParams, StrictRequest } from 'msw';
 import { issueComments, issues, labels, users } from './db';
-import { AddIssueBody, Issue, IssueComment } from 'src/types';
+import { AddIssueBody, Issue, IssueComment, UpdateIssueBody } from 'src/types';
 
 const makeUrl = (path: string) =>
     `${typeof window === 'undefined' ? 'http://localhost:8000' : ''}${path}`;
@@ -228,4 +228,53 @@ export const handlers = [
         issues.push(issue);
         return HttpResponse.json(issue, { status: 201 });
     }),
+    http.put<PathParams, UpdateIssueBody>(
+        makeUrl('/api/issues/:number'),
+        async ({ request, params }) => {
+            try {
+                await handleErrorDelay(request);
+            } catch {
+                return HttpResponse.json({ error: 'Error in request' }, { status: 500 });
+            }
+
+            const { number } = params;
+            if (!number) {
+                return HttpResponse.json({ error: 'Not found' }, { status: 404 });
+            }
+            const issue = issues.find((issue) => issue.number === +number);
+            if (!issue) {
+                return HttpResponse.json({ error: 'Not found' }, { status: 404 });
+            }
+
+            const body = await request.json();
+
+            if (body.title) {
+                issue.title = body.title;
+            }
+            if (body.status) {
+                issue.status = body.status;
+            }
+            if (body.labels) {
+                const bodyLabels = body.labels;
+                const newLabels = bodyLabels
+                    .map((l: string) => {
+                        const label = labels.find((lbl) => lbl.name === l);
+                        if (label) {
+                            return label.id;
+                        }
+                    })
+                    .filter((l) => l !== undefined);
+
+                issue.labels = newLabels;
+            }
+            if (body.dueDate) {
+                issue.dueDate = body.dueDate;
+            }
+            if (body.assignee) {
+                issue.assignee = users.find((user) => user.id === body.assignee)?.id || null;
+            }
+
+            return HttpResponse.json(issue, { status: 200 });
+        },
+    ),
 ];

@@ -1,11 +1,13 @@
 import fetchWithError from 'src/helpers/fetchWithError';
-import { AddIssueBody, Issue, IssueComment, Label, User } from 'src/types';
+import { AddIssueBody, Issue, IssueComment, Label, UpdateIssueBody, User } from 'src/types';
 
 class ApiIssueTracker {
     getIssues =
         (queryString: string) =>
         ({ signal }: RequestInit): Promise<Issue[]> =>
             fetchWithError(`/api/issues?` + queryString, { signal });
+    getUsers = ({ signal }: RequestInit): Promise<User[]> =>
+        fetchWithError('/api/users', { signal });
     getUserById =
         (userId: string) =>
         ({ signal }: RequestInit): Promise<User> =>
@@ -29,6 +31,12 @@ class ApiIssueTracker {
             method: 'POST',
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify(issueBody),
+        }).then((res) => res.json());
+    updateIssue = (issueId: string, body: UpdateIssueBody) =>
+        fetch(`/api/issues/${issueId}`, {
+            method: 'PUT',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(body),
         }).then((res) => res.json());
 }
 

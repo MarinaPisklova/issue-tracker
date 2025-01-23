@@ -4,6 +4,9 @@ import { useParams } from 'react-router';
 import { IssueHeader } from '@components/IssueHeader';
 import { IssueComment } from '@components/IssueComment';
 import { IssueDetailsWrapper } from './IssueDetails.styles';
+import IssueStatus from '@components/IssueStatus';
+import IssueAssignment from '@components/IssueAssignment';
+import IssueLabels from '@components/IssueLabels';
 
 export default function IssueDetails() {
     const { number } = useParams();
@@ -30,7 +33,20 @@ export default function IssueDetails() {
                                 ))
                             )}
                         </section>
-                        <aside></aside>
+                        <aside>
+                            <IssueStatus
+                                status={issueQuery.data.status}
+                                issueNumber={issueQuery.data.number.toString()}
+                            />
+                            <IssueAssignment
+                                assignee={issueQuery.data.assignee}
+                                issueNumber={issueQuery.data.number.toString()}
+                            />
+                            <IssueLabels
+                                labels={issueQuery.data.labels}
+                                issueNumber={issueQuery.data.number.toString()}
+                            />
+                        </aside>
                     </main>
                 </>
             )}

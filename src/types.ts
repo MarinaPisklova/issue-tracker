@@ -36,3 +36,11 @@ export interface AddIssueBody {
     title: string;
     comment: string;
 }
+
+export interface UpdateIssueBody {
+    title?: string;
+    status?: IssueStatus;
+    dueDate?: Date | null;
+    assignee?: string | null;
+    labels?: string[];
+}
