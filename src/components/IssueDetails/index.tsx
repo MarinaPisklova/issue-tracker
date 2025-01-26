@@ -7,11 +7,15 @@ import { IssueDetailsWrapper } from './IssueDetails.styles';
 import IssueStatus from '@components/IssueStatus';
 import IssueAssignment from '@components/IssueAssignment';
 import IssueLabels from '@components/IssueLabels';
+import useScrollToBottomAction from 'src/helpers/useScrollToBottomAction';
+import Loader from '@components/Loader';
 
 export default function IssueDetails() {
     const { number } = useParams();
     const issueQuery = useIssueData(number ?? '');
     const commentsQuery = useIssueComments(number ?? '');
+
+    useScrollToBottomAction(document, commentsQuery.fetchNextPage, 100);
 
     if (!issueQuery.data) return null;
 
@@ -28,10 +32,13 @@ export default function IssueDetails() {
                             {commentsQuery.isLoading ? (
                                 <p>Loading...</p>
                             ) : (
-                                commentsQuery.data?.map((comment) => (
-                                    <IssueComment key={comment.id} {...comment} />
-                                ))
+                                commentsQuery.data?.pages.map((commentPage) =>
+                                    commentPage.map((comment) => (
+                                        <IssueComment key={comment.id} {...comment} />
+                                    )),
+                                )
                             )}
+                            {commentsQuery.isFetchingNextPage && <Loader />}
                         </section>
                         <aside>
                             <IssueStatus

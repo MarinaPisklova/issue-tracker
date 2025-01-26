@@ -13,3 +13,13 @@ export const IssuesListWrapper = styled.ul`
     flex-direction: column;
     gap: 1rem;
 `;
+
+export const Pagination = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    & button {
+        width: max-content;
+    }
+`;

@@ -20,8 +20,8 @@ class ApiIssueTracker {
             fetchWithError(`/api/issues/${issueId}`, { signal });
     getIssueComments =
         (issueId: string) =>
-        ({ signal }: RequestInit): Promise<IssueComment[]> =>
-            fetchWithError(`/api/issues/${issueId}/comments`, { signal });
+        ({ signal, pageParam }: RequestInit & { pageParam: number }): Promise<IssueComment[]> =>
+            fetchWithError(`/api/issues/${issueId}/comments?page=${pageParam}`, { signal });
     searchIssues =
         (queryString: string) =>
         ({ signal }: RequestInit): Promise<{ count: number; items: Issue[] }> =>

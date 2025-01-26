@@ -30,9 +30,10 @@ export default function IssueItem(props: IIssueItem) {
             queryKey: ['issues', number.toString()],
             queryFn: api.getIssueById(number.toString()),
         });
-        queryClient.prefetchQuery({
+        queryClient.prefetchInfiniteQuery({
             queryKey: ['issues', number.toString(), 'comments'],
             queryFn: api.getIssueComments(number.toString()),
+            initialPageParam: 1,
         });
     };
 
